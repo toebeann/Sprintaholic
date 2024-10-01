@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine.InputSystem;
@@ -8,15 +9,41 @@ namespace Tobey.Sprintaholic.SupermarketSimulator;
 public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
+    internal static new ConfigFile Config;
+
+    internal static ConfigEntry<float> SpeedMultiplier;
+    internal static ConfigEntry<float> WalkSpeed;
+    internal static ConfigEntry<float> SprintSpeed;
 
     private void Awake()
     {
         Logger = base.Logger;
+        Config = base.Config;
+
+        SpeedMultiplier = Config.Bind(
+            section: "Movement",
+            key: "Speed multiplier",
+            defaultValue: 1f,
+            description: "Walk and sprint speed will be multiplied by this number");
+
+        WalkSpeed = Config.Bind(
+            section: "Movement",
+            key: "Walk speed",
+            defaultValue: 4f,
+            description: "Move speed of the character in m/s");
+
+        SprintSpeed = Config.Bind(
+            section: "Movement",
+            key: "Sprint speed",
+            defaultValue: 8f,
+            description: "Sprint speed of the character in m/s");
+
         Harmony.CreateAndPatchAll(typeof(Plugin));
     }
 
     [HarmonyPatch(typeof(InputActions), nameof(InputActions.OnSprint))]
-    private static bool Prefix(InputActions __instance, InputAction.CallbackContext context)
+    [HarmonyPrefix]
+    private static bool InputActions_OnSprint(InputActions __instance, InputAction.CallbackContext context)
     {
         var sprint = Traverse.Create(__instance).Field("m_Sprint");
 
@@ -32,6 +59,52 @@ public class Plugin : BaseUnityPlugin
         else
         {
             return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(FirstPersonController), "Start")]
+    [HarmonyPostfix]
+    private static void FirstPersonController_Start(FirstPersonController __instance)
+    {
+        var instance = Traverse.Create(__instance);
+
+        var moveSpeed = instance.Field("MoveSpeed");
+        if (moveSpeed.FieldExists())
+        {
+            WalkSpeed = Config.Bind(
+                section: "Movement",
+                key: "Walk speed",
+                defaultValue: moveSpeed.GetValue<float>(),
+                description: "Move speed of the character in m/s");
+        }
+
+        var sprintSpeed = instance.Field("SprintSpeed");
+        if (sprintSpeed.FieldExists())
+        {
+            SprintSpeed = Config.Bind(
+                section: "Movement",
+                key: "Sprint speed",
+                defaultValue: sprintSpeed.GetValue<float>(),
+                description: "Sprint speed of the character in m/s");
+        }
+    }
+
+    [HarmonyPatch(typeof(FirstPersonController), "Move")]
+    [HarmonyPrefix]
+    private static void FirstPersonController_Move(FirstPersonController __instance)
+    {
+        var instance = Traverse.Create(__instance);
+
+        var moveSpeed = instance.Field("MoveSpeed");
+        if (moveSpeed.FieldExists())
+        {
+            moveSpeed.SetValue(WalkSpeed.Value * SpeedMultiplier.Value);
+        }
+
+        var sprintSpeed = instance.Field("SprintSpeed");
+        if (sprintSpeed.FieldExists())
+        {
+            sprintSpeed.SetValue(SprintSpeed.Value * SpeedMultiplier.Value);
         }
     }
 }
