@@ -9,7 +9,7 @@ Turn your sprint key into a toggle so you can sprint indefinitely without tiring
 Extremely easy! Just follow these 3 simple steps:
 
 1. If you haven't already, install [Tobey's BepInEx x MelonLoader Pack for Supermarket Simulator](https://github.com/toebeann/BepInEx.SupermarketSimulator) (make sure to read the [Quick Start](https://github.com/toebeann/BepInEx.SupermarketSimulator#quick-start), I promise it's easy!)
-2. [Download the latest release of Sprintaholic from the releases page](https://github.com/toebeann/BepInEx.SupermarketSimulator/releases/latest/download/Tobey.Sprintaholic.SupermarketSimulator.zip)
+2. [Download the latest release of Sprintaholic from the releases page](https://github.com/toebeann/Sprintaholic/releases/latest/download/Tobey.Sprintaholic.SupermarketSimulator.zip)
 3. Extract the `BepInEx` folder from the downloaded Sprintaholic zip file into your game folder - an easy way to do this is simply double-click on the zip file and then drag the `BepInEx` folder out into your game folder
 
 That's all there is to it!
