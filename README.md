@@ -14,6 +14,16 @@ Extremely easy! Just follow these 3 simple steps:
 
 That's all there is to it!
 
+## Customisation
+
+If desired, you can also customise your movement speed by editing the config file:
+
+1. Make sure to run the game once with Sprintaholic installed to generate Sprintaholic's config file
+2. Find the config file at the location: `Supermarket Simulator` > `BepInEx` > `config` > `Tobey.Sprintaholic.SupermarketSimulator.cfg`
+3. Open it in a text editor of your choice such as Notepad, Visual Studio Code, etc.
+4. Set the values as desired, making sure to read the comments (the lines beginning with `#`)
+5. Reload the game for your changes to take effect
+
 ## Need help?
 
 You can use the following channels to ask for help:
