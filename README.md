@@ -14,7 +14,7 @@ Extremely easy! Just follow these 3 simple steps:
 
 That's all there is to it!
 
-## Customisation
+## Custom movement speed
 
 If desired, you can also customise your movement speed by editing the config file:
 
