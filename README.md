@@ -2,7 +2,7 @@
 
 # Sprintaholic 🏃‍➡️
 
-Turn your sprint key into a toggle so you can sprint indefinitely without tiring out your pinkie finger - _**with no configuration required!**_
+Turn your sprint key into a toggle so you can run indefinitely without tiring out your pinkie finger - _**with no configuration required!**_
 
 ## Installation
 
