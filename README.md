@@ -23,7 +23,7 @@ The default settings of Sprintaholic offer a similar experience to playing with 
 To save you some work, I have created some config presets for various use cases, available exclusively in the [optional files](https://www.nexusmods.com/supermarketsimulator/mods/792?tab=files) section of [Sprintaholic's Nexus Mods page](https://www.nexusmods.com/supermarketsimulator/mods/792), so make sure to check them out. My personal favourite is **Inverted movement speed**, which has you sprinting by default and holding `shift` to walk.
 
 > [!NOTE]
-> When installing presets with [Vortex](https://www.nexusmods.com/about/vortex/), make sure to only have one Sprintaholic config preset enabled in Vortex at a time.
+> When installing presets with [Vortex](https://www.nexusmods.com/about/vortex/), make sure to only have one config preset enabled in Vortex at a time.
 
 If further customisation is desired, you can edit the config file to modify various options (see below headings for details):
 
