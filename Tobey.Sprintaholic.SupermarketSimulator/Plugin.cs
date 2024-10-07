@@ -2,6 +2,10 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +27,8 @@ public class Plugin : BaseUnityPlugin
         Logger = base.Logger;
         Config = base.Config;
 
+        ApplyMigrations(Config);
+
         HoldToSprint = Config.Bind(
             section: "Controls",
             key: "Hold to sprint",
@@ -42,6 +48,64 @@ public class Plugin : BaseUnityPlugin
             description: "Walk and sprint speed will be multiplied by this number");
 
         Harmony.CreateAndPatchAll(typeof(Plugin));
+    }
+
+    internal static readonly SortedDictionary<Version, Action<ConfigFile>> migrations = new()
+    {
+        [new("1.2.0")] = (ConfigFile config) =>
+        {
+            // v1.2.0 introduces `Controls.Auto disable sprint` config entry, default true to mimic the way the sprint toggle works with gamepad controls
+            // Users of Sprintaholic prior to this version will be used to having to disable it manually, so we should default it to false for them to avoid messing with their muscle memory
+            config.Bind(
+                section: "Controls",
+                key: "Auto disable sprint",
+                defaultValue: false,
+                description: "When enabled, sprint will automatically be toggled off when you stop moving. Ignored when Hold to sprint is enabled.");
+        },
+    };
+
+    private static void ApplyMigrations(ConfigFile config)
+    {
+        try
+        {
+            ReadOnlySpan<string> lines = File.ReadAllLines(config.ConfigFilePath).Where((line) => !string.IsNullOrWhiteSpace(line)).ToArray();
+
+            Version pluginVersion = new(MyPluginInfo.PLUGIN_VERSION);
+            Version? configVersion = null;
+
+            string searchString = $"## Settings file was created by plugin {MyPluginInfo.PLUGIN_NAME} v";
+
+            for (int i = 0; i < lines.Length - 1; i++)
+            {
+                if (lines[i].StartsWith(searchString, StringComparison.InvariantCultureIgnoreCase) &&
+                    lines[i + 1].Equals($"## Plugin GUID: {MyPluginInfo.PLUGIN_GUID}", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    configVersion = new(lines[i][searchString.Length..]);
+                    break;
+                }
+            }
+
+            if (configVersion is null || // couldn't parse version from config file, treat as latest
+                configVersion >= pluginVersion) // config version is same or newer than plugin version
+            {   // no need to apply migrations
+                return;
+            }
+
+            // define migrations
+            var migratedVersion = configVersion;
+            config.SaveOnConfigSet = false;
+            foreach (var migration in migrations.SkipWhile((kvp) => kvp.Key <= configVersion))
+            {
+                Logger?.LogInfo($"Applying config migration v{migratedVersion} -> v{migration.Key}");
+                migration.Value(config);
+                migratedVersion = migration.Key;
+            }
+            config.SaveOnConfigSet = true;
+        }
+        catch (FileNotFoundException) // config file doesn't exist, no need to apply migrations
+        { }
+        catch // some other error occurred, probably best to act as if config file doesn't exist
+        { }
     }
 
     [HarmonyPatch(typeof(InputActions), nameof(InputActions.OnSprint))]
@@ -65,7 +129,7 @@ public class Plugin : BaseUnityPlugin
 
             return false;
         }
-        }
+    }
 
     [HarmonyPatch(typeof(FirstPersonController), "Start")]
     [HarmonyPostfix]
