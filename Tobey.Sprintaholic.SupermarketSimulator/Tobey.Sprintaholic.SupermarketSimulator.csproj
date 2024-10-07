@@ -13,6 +13,7 @@
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>Tobey.Sprintaholic.SupermarketSimulator</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Target Name="ZipBuild" AfterTargets="AfterBuild">
