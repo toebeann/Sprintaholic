@@ -26,18 +26,6 @@ public class Plugin : BaseUnityPlugin
             defaultValue: 1f,
             description: "Walk and sprint speed will be multiplied by this number");
 
-        WalkSpeed = Config.Bind(
-            section: "Movement",
-            key: "Walk speed",
-            defaultValue: 4f,
-            description: "Move speed of the character in m/s");
-
-        SprintSpeed = Config.Bind(
-            section: "Movement",
-            key: "Sprint speed",
-            defaultValue: 8f,
-            description: "Sprint speed of the character in m/s");
-
         Harmony.CreateAndPatchAll(typeof(Plugin));
     }
 
