@@ -76,7 +76,7 @@ public class Plugin : BaseUnityPlugin
         var moveSpeed = instance.Field("MoveSpeed");
         if (moveSpeed.FieldExists())
         {
-            WalkSpeed = Config.Bind(
+            WalkSpeed = Config?.Bind(
                 section: "Movement",
                 key: "Walk speed",
                 defaultValue: moveSpeed.GetValue<float>(),
@@ -86,7 +86,7 @@ public class Plugin : BaseUnityPlugin
         var sprintSpeed = instance.Field("SprintSpeed");
         if (sprintSpeed.FieldExists())
         {
-            SprintSpeed = Config.Bind(
+            SprintSpeed = Config?.Bind(
                 section: "Movement",
                 key: "Sprint speed",
                 defaultValue: sprintSpeed.GetValue<float>(),
@@ -103,13 +103,13 @@ public class Plugin : BaseUnityPlugin
         var moveSpeed = instance.Field("MoveSpeed");
         if (moveSpeed.FieldExists())
         {
-            moveSpeed.SetValue(WalkSpeed.Value * SpeedMultiplier.Value);
+            moveSpeed.SetValue(WalkSpeed?.Value * SpeedMultiplier?.Value);
         }
 
         var sprintSpeed = instance.Field("SprintSpeed");
         if (sprintSpeed.FieldExists())
         {
-            sprintSpeed.SetValue(SprintSpeed.Value * SpeedMultiplier.Value);
+            sprintSpeed.SetValue(SprintSpeed?.Value * SpeedMultiplier?.Value);
         }
     }
 
