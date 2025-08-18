@@ -23,7 +23,7 @@ That's all there is to it!
 
 The default settings of Sprintaholic offer a similar experience to playing with a gamepad - the sprint keybind becomes a toggle which is automatically disabled whenever you stop moving. However, there are several settings that you can tweak, enabling you to fully customise your sprint addiction.
 
-To save you some work, I have created some config presets for various use cases, available exclusively in the [optional files](https://www.nexusmods.com/supermarketsimulator/mods/792?tab=files) section of [Sprintaholic's Nexus Mods page](https://www.nexusmods.com/supermarketsimulator/mods/792), so make sure to check them out. To install them, simply follow the same instructions as for installing Sprintaholic itself! My personal favourite preset is **Inverted movement speed**, which has you sprinting by default and holding `shift` to walk.
+To save you some work, I have created some config presets for various use cases, available exclusively in the [optional files](https://www.nexusmods.com/supermarketsimulator/mods/792?tab=files) section of [Sprintaholic's Nexus Mods page](https://www.nexusmods.com/supermarketsimulator/mods/792), so make sure to check them out. My personal favourite preset is **Inverted movement speed**, which has you sprinting by default and holding `shift` to walk.
 
 > [!NOTE]
 > When installing config presets with [Vortex](https://www.nexusmods.com/about/vortex/), make sure to only have one Sprintaholic config preset enabled in Vortex at a time.
