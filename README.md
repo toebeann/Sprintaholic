@@ -7,6 +7,8 @@
 - Customise your movement speed and zoom to your heart's content!
 - Optional premade config files to suit your preferences!
 
+Tested compatible with Supermarket Simulator v1.0.2
+
 ## Installation
 
 Extremely easy! Either use [Vortex](https://www.nexusmods.com/about/vortex/) to install from [Nexus Mods](https://www.nexusmods.com/supermarketsimulator/mods/792), or for manual installation follow these 3 simple steps:
