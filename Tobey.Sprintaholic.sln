@@ -7,14 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tobey.Sprintaholic.Supermar
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Game Pass|Any CPU = Game Pass|Any CPU
+		Steam|Any CPU = Steam|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Game Pass|Any CPU.ActiveCfg = Game Pass|Any CPU
+		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Game Pass|Any CPU.Build.0 = Game Pass|Any CPU
+		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Steam|Any CPU.ActiveCfg = Steam|Any CPU
+		{0C98DFD1-DF4F-4B87-A16C-7421D223381D}.Steam|Any CPU.Build.0 = Steam|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

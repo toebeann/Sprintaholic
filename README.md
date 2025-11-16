@@ -7,13 +7,14 @@
 - Customise your movement speed and zoom to your heart's content!
 - Optional premade config files to suit your preferences!
 
-Tested compatible with Supermarket Simulator v1.0.2
+Tested compatible with Supermarket Simulator v1.1.7 on both Steam and PC Game Pass.\
+Has not been tested in multiplayer - if you use it in multiplayer, please [get in touch](#need-help) letting me know how it goes!
 
 ## Installation
 
-Extremely easy! Either use [Vortex](https://www.nexusmods.com/about/vortex/) to install from [Nexus Mods](https://www.nexusmods.com/supermarketsimulator/mods/792), or for manual installation follow these 3 simple steps:
+Extremely easy! Just follow these 3 simple steps:
 
-1. If you haven't already, install [Tobey's BepInEx x MelonLoader Pack for Supermarket Simulator](https://github.com/toebeann/BepInEx.SupermarketSimulator) (make sure to read the [Quick Start](https://github.com/toebeann/BepInEx.SupermarketSimulator#quick-start), I promise it's easy!)
+1. If you haven't already, install [Tobey's BepInEx Pack for Supermarket Simulator](https://github.com/toebeann/BepInEx.SupermarketSimulator) (make sure to read the [quick start](https://github.com/toebeann/BepInEx.SupermarketSimulator#quick-start), I promise it's easy!)
 2. [Download the latest release of Sprintaholic from the releases page](https://github.com/toebeann/Sprintaholic/releases/latest/download/Tobey.Sprintaholic.SupermarketSimulator.zip)
 3. Extract the `BepInEx` folder from the downloaded Sprintaholic zip file into your game folder - an easy way to do this is simply double-click on the zip file and then drag the `BepInEx` folder out into your game folder
 
@@ -25,9 +26,6 @@ The default settings of Sprintaholic offer a similar experience to playing with 
 
 To save you some work, I have created some config presets for various use cases, available exclusively in the [optional files](https://www.nexusmods.com/supermarketsimulator/mods/792?tab=files) section of [Sprintaholic's Nexus Mods page](https://www.nexusmods.com/supermarketsimulator/mods/792), so make sure to check them out. My personal favourite preset is **Inverted movement speed**, which has you sprinting by default and holding `shift` to walk.
 
-> [!NOTE]
-> When installing config presets with [Vortex](https://www.nexusmods.com/about/vortex/), make sure to only have one Sprintaholic config preset enabled in Vortex at a time.
-
 If further customisation is desired, you can edit the config file to modify various options (see below headings for details):
 
 1. Make sure to run the game once with Sprintaholic installed to generate Sprintaholic's config file
@@ -38,9 +36,6 @@ If further customisation is desired, you can edit the config file to modify vari
 
 > [!NOTE]
 > Some default config entries will only be generated once you have loaded into a save.
-
-> [!NOTE]
-> If you have a config preset enabled in [Vortex](https://www.nexusmods.com/about/vortex/), any modifications you make to the config file will be saved to the preset in Vortex. To reset the config file back to the preset, right click the preset in the Vortex mods tab and click `Reinstall` > `Continue`.
 
 ### Controls
 

@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -9,22 +10,22 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Tobey.Sprintaholic.SupermarketSimulator;
+namespace Tobey.Sprintaholic.SupermarketSimulator.IL2CPP;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-public class Plugin : BaseUnityPlugin
+public class Plugin : BasePlugin
 {
-    internal static new ManualLogSource? Logger;
-    internal static new ConfigFile? Config;
+    internal static new ManualLogSource Log;
+    internal static new ConfigFile Config;
 
-    internal static ConfigEntry<bool>? HoldToSprint;
-    internal static ConfigEntry<bool>? AutoDisableSprint;
-    internal static ConfigEntry<float>? SpeedMultiplier;
-    internal static ConfigEntry<float>? WalkSpeed;
-    internal static ConfigEntry<float>? SprintSpeed;
+    internal static ConfigEntry<bool> HoldToSprint;
+    internal static ConfigEntry<bool> AutoDisableSprint;
+    internal static ConfigEntry<float> SpeedMultiplier;
+    internal static ConfigEntry<float> WalkSpeed;
+    internal static ConfigEntry<float> SprintSpeed;
 
-    private void Awake()
+    public override void Load()
     {
-        Logger = base.Logger;
+        Log = base.Log;
         Config = base.Config;
 
         ApplyMigrations(Config);
@@ -71,11 +72,11 @@ public class Plugin : BaseUnityPlugin
             ReadOnlySpan<string> lines = File.ReadAllLines(config.ConfigFilePath).Where((line) => !string.IsNullOrWhiteSpace(line)).ToArray();
 
             Version pluginVersion = new(MyPluginInfo.PLUGIN_VERSION);
-            Version? configVersion = null;
+            Version configVersion = null;
 
             string searchString = $"## Settings file was created by plugin {MyPluginInfo.PLUGIN_NAME} v";
 
-            for (int i = 0; i < lines.Length - 1; i++)
+            for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i].StartsWith(searchString, StringComparison.InvariantCultureIgnoreCase) &&
                     lines[i + 1].Equals($"## Plugin GUID: {MyPluginInfo.PLUGIN_GUID}", StringComparison.InvariantCultureIgnoreCase))
@@ -96,7 +97,7 @@ public class Plugin : BaseUnityPlugin
             config.SaveOnConfigSet = false;
             foreach (var migration in migrations.SkipWhile((kvp) => kvp.Key <= configVersion))
             {
-                Logger?.LogInfo($"Applying config migration v{migratedVersion} -> v{migration.Key}");
+                Log.LogInfo($"Applying config migration v{migratedVersion} -> v{migration.Key}");
                 migration.Value(config);
                 migratedVersion = migration.Key;
             }
@@ -104,7 +105,7 @@ public class Plugin : BaseUnityPlugin
         }
         catch (FileNotFoundException) // config file doesn't exist, no need to apply migrations
         { }
-        catch // some other error occurred, probably best to act as if config file doesn't exist
+        catch // some other error occured, probably best to act as if config file doesn't exist
         { }
     }
 
@@ -112,11 +113,8 @@ public class Plugin : BaseUnityPlugin
     [HarmonyPrefix]
     private static bool InputActions_OnSprint(InputActions __instance, InputAction.CallbackContext context)
     {
-        var sprint = Traverse.Create(__instance).Field("m_Sprint");
-
-        if (HoldToSprint?.Value is true || // hold to sprint is enabled in config
-            !__instance.IsCurrentDeviceMouse || // user is not currently using kbm controls
-            !sprint.FieldExists()) // couldn't get current sprint value
+        if (HoldToSprint.Value is true || // hold to sprint is enabled in config
+            !__instance.IsCurrentDeviceMouse) // user is not currently using kbm controls
         {   // run original method
             return true;
         }
@@ -124,81 +122,54 @@ public class Plugin : BaseUnityPlugin
         {   // treat sprint as toggle
             if (context.started)
             {
-                __instance.SprintInput(!sprint.GetValue<bool>());
+                __instance.SprintInput(!__instance.m_Sprint);
             }
 
             return false;
         }
     }
 
-    [HarmonyPatch(typeof(FirstPersonController), "Start")]
+    [HarmonyPatch(typeof(FirstPersonController), nameof(FirstPersonController.Start))]
     [HarmonyPostfix]
     private static void FirstPersonController_Start(FirstPersonController __instance)
     {
-        var instance = Traverse.Create(__instance);
+        WalkSpeed = Config.Bind(
+            section: "Movement",
+            key: "Walk speed",
+            defaultValue: __instance.MoveSpeed,
+            description: "Move speed of the character in m/s");
 
-        var moveSpeed = instance.Field("MoveSpeed");
-        if (moveSpeed.FieldExists())
-        {
-            WalkSpeed = Config?.Bind(
-                section: "Movement",
-                key: "Walk speed",
-                defaultValue: moveSpeed.GetValue<float>(),
-                description: "Move speed of the character in m/s");
-        }
-
-        var sprintSpeed = instance.Field("SprintSpeed");
-        if (sprintSpeed.FieldExists())
-        {
-            SprintSpeed = Config?.Bind(
-                section: "Movement",
-                key: "Sprint speed",
-                defaultValue: sprintSpeed.GetValue<float>(),
-                description: "Sprint speed of the character in m/s");
-        }
+        SprintSpeed = Config.Bind(
+            section: "Movement",
+            key: "Sprint speed",
+            defaultValue: __instance.SprintSpeed,
+            description: "Sprint speed of the character in m/s");
     }
 
-    [HarmonyPatch(typeof(FirstPersonController), "Move")]
+    [HarmonyPatch(typeof(FirstPersonController), nameof(FirstPersonController.Move))]
     [HarmonyPrefix]
     private static void FirstPersonController_Move_Prefix(FirstPersonController __instance)
     {
-        var instance = Traverse.Create(__instance);
-
-        var moveSpeed = instance.Field("MoveSpeed");
-        if (moveSpeed.FieldExists())
-        {
-            moveSpeed.SetValue(WalkSpeed?.Value * SpeedMultiplier?.Value);
-        }
-
-        var sprintSpeed = instance.Field("SprintSpeed");
-        if (sprintSpeed.FieldExists())
-        {
-            sprintSpeed.SetValue(SprintSpeed?.Value * SpeedMultiplier?.Value);
-        }
+        __instance.MoveSpeed = (WalkSpeed?.Value ?? __instance.MoveSpeed) * SpeedMultiplier.Value;
+        __instance.SprintSpeed = (SprintSpeed?.Value ?? __instance.SprintSpeed) * SpeedMultiplier.Value;
     }
 
     private static bool wasMoving;
 
-    [HarmonyPatch(typeof(FirstPersonController), nameof(CharacterController.Move))]
-    [HarmonyPrefix]
+    [HarmonyPatch(typeof(FirstPersonController), nameof(FirstPersonController.Move))]
+    [HarmonyPostfix]
     private static void FirstPersonController_Move_Postfix(FirstPersonController __instance)
     {
-        if (HoldToSprint?.Value is false && // hold to sprint is disabled in config
-            AutoDisableSprint?.Value is true) // auto disable sprint is enabled in config
+        if (HoldToSprint.Value is false && // hold to sprint is disabled in config
+            AutoDisableSprint.Value is true) // auto disable sprint is enabled in config
         {
-            var _controller = Traverse.Create(__instance).Field("_controller");
-            if (!_controller.FieldExists())
+            bool isMoving = __instance._controller.velocity != Vector3.zero;
+            if (!isMoving && wasMoving)
             {
-                return;
+                __instance.m_InputActions.SprintInput(false);
             }
 
-            bool moving = _controller.GetValue<CharacterController>().velocity != Vector3.zero;
-            if (!moving && wasMoving) // player has just stopped moving
-            {
-                InputActions.Instance.SprintInput(false);
-            }
-
-            wasMoving = moving;
+            wasMoving = isMoving;
         }
     }
 }
