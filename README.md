@@ -29,7 +29,7 @@ To save you some work, I have created some config presets for various use cases,
 If further customisation is desired, you can edit the config file to modify various options (see below headings for details):
 
 1. Make sure to run the game once with Sprintaholic installed to generate Sprintaholic's config file
-2. Find the config file at the location: `Supermarket Simulator` > `BepInEx` > `config` > `Tobey.Sprintaholic.SupermarketSimulator.cfg`
+2. Find the config file at the location: `BepInEx` > `config` > `Tobey.Sprintaholic.SupermarketSimulator.cfg`
 3. Open it in a text editor of your choice such as Notepad, Visual Studio Code, etc.
 4. Set the values as desired, making sure to read the comments (the lines beginning with `#`)
 5. Reload the game for your changes to take effect
