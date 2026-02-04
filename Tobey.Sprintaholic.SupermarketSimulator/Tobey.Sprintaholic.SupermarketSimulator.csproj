@@ -15,9 +15,9 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <RootNamespace>Tobey.Sprintaholic.SupermarketSimulator</RootNamespace>
-    <Configurations>Steam;Game Pass</Configurations>
+    <Configurations>Steam;GamePass</Configurations>
     <GamePath Condition="'$(Configuration)'=='Steam'">E:\SteamLibrary\steamapps\common\Supermarket Simulator</GamePath>
-    <GamePath Condition="'$(Configuration)'=='Game Pass'">E:\XboxGames\Supermarket Simulator\Content</GamePath>
+    <GamePath Condition="'$(Configuration)'=='GamePass'">E:\XboxGames\Supermarket Simulator\Content</GamePath>
   </PropertyGroup>
 
   <Target Name="ZipClean" AfterTargets="AfterClean">
