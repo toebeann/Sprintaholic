@@ -1,7 +1,9 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using DG.Tweening;
 using HarmonyLib;
+using UnityEngine;
 using SprintMode = Tobey.Sprintaholic.Definitions.SprintMode;
 
 namespace Tobey.Sprintaholic.MegastoreSimulator;
@@ -16,6 +18,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> AutoDisableSprint;
     internal static ConfigEntry<bool> SprintByDefault;
     internal static ConfigEntry<bool> InstantAcceleration;
+    internal static ConfigEntry<bool> DisableHeadBobbing;
     internal static ConfigEntry<float> SpeedMultiplier;
     internal static ConfigEntry<float> WalkSpeed;
     internal static ConfigEntry<float> SprintSpeed;
@@ -36,6 +39,7 @@ public class Plugin : BaseUnityPlugin
         InstantAcceleration = Config.Bind(new ConfigDefinition<bool>(
             Definition: new("Movement", "Instant acceleration"),
             Description: new("Instantly transition between walking and sprinting.")));
+        DisableHeadBobbing = Config.Bind("Movement", "Disable head bobbing", false);
 
         SprintControlMode.SettingChanged += SprintControlMode_SettingChanged;
 
@@ -121,5 +125,16 @@ public class Plugin : BaseUnityPlugin
                 false => ___walkSpeed * multiplier,
             };
     }
+    }
+
+    [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.PlayerMovement))]
+    [HarmonyPostfix]
+    private static void KillHeadBobbing(Transform ___boxParent, Transform ___charParent)
+    {
+        if (DisableHeadBobbing.Value)
+        {
+            ___boxParent.DOKill(false);
+            ___charParent.DOKill(false);
+        }
     }
 }

@@ -47,6 +47,10 @@
       <HintPath>$(GamePath)\Megastore Simulator_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DOTween">
+      <HintPath>$(GamePath)\Megastore Simulator_Data\Managed\DOTween.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>$(GamePath)\Megastore Simulator_Data\Managed\Unity.InputSystem.dll</HintPath>
       <Private>False</Private>
