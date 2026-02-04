@@ -38,7 +38,7 @@ public class Plugin : BaseUnityPlugin
         SprintByDefault = Config.Bind(Definitions.SprintByDefault);
         InstantAcceleration = Config.Bind(new ConfigDefinition<bool>(
             Definition: new("Movement", "Instant acceleration"),
-            Description: new("Instantly transition between walking and sprinting.")));
+            Description: new("Disables the acceleration/deceleration of movement, so that you always move at maximum speed.")));
         DisableHeadBobbing = Config.Bind("Movement", "Disable head bobbing", false);
         SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
