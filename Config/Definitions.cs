@@ -16,7 +16,7 @@ internal static class Definitions
 
     public static readonly ConfigDefinition<bool> AutoDisableSprint = new(
         Definition: new("Controls", "Auto disable sprint"),
-        Description: new("When Sprint control mode is Toggle, whether to automatically to stop sprinting when you stop moving."),
+        Description: new("When Sprint control mode is Toggle, whether to automatically stop sprinting when you stop moving."),
         DefaultValue: true);
 
     public static readonly ConfigDefinition<bool> SprintByDefault = new(
