@@ -15,6 +15,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<SprintMode> SprintControlMode;
     internal static ConfigEntry<bool> AutoDisableSprint;
     internal static ConfigEntry<bool> SprintByDefault;
+    internal static ConfigEntry<bool> InstantAcceleration;
     internal static ConfigEntry<float> SpeedMultiplier;
     internal static ConfigEntry<float> WalkSpeed;
     internal static ConfigEntry<float> SprintSpeed;
@@ -32,6 +33,9 @@ public class Plugin : BaseUnityPlugin
         SprintControlMode = Config.Bind(Definitions.SprintControlMode);
         AutoDisableSprint = Config.Bind(Definitions.AutoDisableSprint);
         SprintByDefault = Config.Bind(Definitions.SprintByDefault);
+        InstantAcceleration = Config.Bind(new ConfigDefinition<bool>(
+            Definition: new("Movement", "Instant acceleration"),
+            Description: new("Instantly transition between walking and sprinting.")));
 
         SprintControlMode.SettingChanged += SprintControlMode_SettingChanged;
 
@@ -102,6 +106,20 @@ public class Plugin : BaseUnityPlugin
             true => WalkSpeed?.Value ?? ___walkSpeed,
             _ => SprintSpeed?.Value ?? ___runSpeed,
         };
+    }
+
+    [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.SetMovementSpeed))]
+    [HarmonyPostfix]
+    private static void ApplyInstantAcceleration(float ___walkSpeed, float ___runSpeed, ref float ___movementSpeed)
+    {
+        if (InstantAcceleration.Value)
+        {
+            var multiplier = SingletonBehaviour<VehicleManager>.Instance.GetSpeedMultiplier();
+            ___movementSpeed = SingletonBehaviour<InputManager>.Instance.IsPressingRun switch
+            {
+                true => ___runSpeed * multiplier,
+                false => ___walkSpeed * multiplier,
+            };
     }
     }
 }
