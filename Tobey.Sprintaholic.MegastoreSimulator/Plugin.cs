@@ -14,6 +14,7 @@ public class Plugin : BaseUnityPlugin
 
     internal static ConfigEntry<SprintMode> SprintControlMode;
     internal static ConfigEntry<bool> AutoDisableSprint;
+    internal static ConfigEntry<bool> SprintByDefault;
     internal static ConfigEntry<float> SpeedMultiplier;
     internal static ConfigEntry<float> WalkSpeed;
     internal static ConfigEntry<float> SprintSpeed;
@@ -30,7 +31,7 @@ public class Plugin : BaseUnityPlugin
 
         SprintControlMode = Config.Bind(Definitions.SprintControlMode);
         AutoDisableSprint = Config.Bind(Definitions.AutoDisableSprint);
-        SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
+        SprintByDefault = Config.Bind(Definitions.SprintByDefault);
 
         SprintControlMode.SettingChanged += SprintControlMode_SettingChanged;
 
@@ -80,7 +81,7 @@ public class Plugin : BaseUnityPlugin
 
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.Awake))]
     [HarmonyPostfix]
-    private static void InitMovementSpeedConfig(float ___walkSpeed, ref float ___runSpeed)
+    private static void InitMovementSpeedConfig(float ___walkSpeed, float ___runSpeed)
     {
         WalkSpeed = Config.Bind(Definitions.WalkSpeed, ___walkSpeed);
         SprintSpeed = Config.Bind(Definitions.SprintSpeed, ___runSpeed);
@@ -90,7 +91,17 @@ public class Plugin : BaseUnityPlugin
     [HarmonyPrefix]
     private static void ModifyBaseMovementSpeed(ref float ___walkSpeed, ref float ___runSpeed)
     {
-        ___walkSpeed = (WalkSpeed?.Value ?? ___walkSpeed) * SpeedMultiplier.Value;
-        ___runSpeed = (SprintSpeed?.Value ?? ___runSpeed) * SpeedMultiplier.Value;
+        ___walkSpeed = SpeedMultiplier.Value * SprintByDefault.Value switch
+        {
+            true => SprintSpeed?.Value ?? ___runSpeed,
+            _ => WalkSpeed?.Value ?? ___walkSpeed,
+        };
+
+        ___runSpeed = SpeedMultiplier.Value * SprintByDefault.Value switch
+        {
+            true => WalkSpeed?.Value ?? ___walkSpeed,
+            _ => SprintSpeed?.Value ?? ___runSpeed,
+        };
+    }
     }
 }

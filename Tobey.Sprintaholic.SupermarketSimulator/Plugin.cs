@@ -17,6 +17,7 @@ public class Plugin : BasePlugin
 
     internal static ConfigEntry<SprintMode> SprintControlMode;
     internal static ConfigEntry<bool> AutoDisableSprint;
+    internal static ConfigEntry<bool> SprintByDefault;
     internal static ConfigEntry<float> SpeedMultiplier;
     internal static ConfigEntry<float> WalkSpeed;
     internal static ConfigEntry<float> SprintSpeed;
@@ -30,6 +31,7 @@ public class Plugin : BasePlugin
 
         SprintControlMode = Config.Bind(Definitions.SprintControlMode);
         AutoDisableSprint = Config.Bind(Definitions.AutoDisableSprint);
+        SprintByDefault = Config.Bind(Definitions.SprintByDefault);
         SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
         Harmony.CreateAndPatchAll(typeof(Plugin));
@@ -73,8 +75,17 @@ public class Plugin : BasePlugin
     [HarmonyPrefix]
     private static void FirstPersonController_Move_Prefix(FirstPersonController __instance)
     {
-        __instance.MoveSpeed = (WalkSpeed?.Value ?? __instance.MoveSpeed) * SpeedMultiplier.Value;
-        __instance.SprintSpeed = (SprintSpeed?.Value ?? __instance.SprintSpeed) * SpeedMultiplier.Value;
+        __instance.MoveSpeed = SpeedMultiplier.Value * SprintByDefault.Value switch
+        {
+            true => SprintSpeed?.Value ?? __instance.SprintSpeed,
+            _ => WalkSpeed?.Value ?? __instance.MoveSpeed,
+        };
+
+        __instance.SprintSpeed = SpeedMultiplier.Value * SprintByDefault.Value switch
+        {
+            true => WalkSpeed?.Value ?? __instance.MoveSpeed,
+            _ => SprintSpeed?.Value ?? __instance.SprintSpeed,
+        }; ;
     }
 
     private static bool wasMoving;

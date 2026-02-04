@@ -19,6 +19,10 @@ internal static class Definitions
         Description: new("When Sprint control mode is Toggle, whether to automatically to stop sprinting when you stop moving."),
         DefaultValue: true);
 
+    public static readonly ConfigDefinition<bool> SprintByDefault = new(
+        Definition: new("Controls", "Sprint by default"),
+        Description: new("Swaps your walk and sprint speed so that you start off sprinting, and the sprint is used to control when you walk. Has no effect when Sprint control mode is Always."));
+
     public static readonly ConfigDefinition<float> SpeedMultiplier = new(
         Definition: new("Movement", "Speed multiplier"),
         Description: new("Walk and sprint speed will be multiplied by this number."),
