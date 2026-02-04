@@ -9,6 +9,8 @@ using SprintMode = Tobey.Sprintaholic.Definitions.SprintMode;
 namespace Tobey.Sprintaholic.MegastoreSimulator;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInProcess("Megastore Simulator")]
+[BepInProcess("Megastore Simulator Prologue")]
 public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;

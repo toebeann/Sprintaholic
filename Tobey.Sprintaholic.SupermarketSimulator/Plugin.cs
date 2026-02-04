@@ -10,6 +10,7 @@ using SprintMode = Tobey.Sprintaholic.Definitions.SprintMode;
 namespace Tobey.Sprintaholic.SupermarketSimulator;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInProcess("Supermarket Simulator")]
 public class Plugin : BasePlugin
 {
     internal static new ManualLogSource Log;
