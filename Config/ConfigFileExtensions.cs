@@ -38,7 +38,7 @@ internal static class ConfigFileExtensions
                     .First(line => line?.StartsWith(searchString) ?? false) // throws if no line satisfies criteria
                     [searchString.Length..];
 
-                Version configVersion = Version.Parse(line[line.LastIndexOf(" v")..]);
+                Version configVersion = Version.Parse(line[(line.LastIndexOf(" v") + 2)..]);
 
                 var migrationsToApply = migrations
                     .SkipWhile(kvp => kvp.Key <= configVersion)
@@ -62,8 +62,10 @@ internal static class ConfigFileExtensions
             }
             catch (FileNotFoundException) // config file doesn't exist, no need to apply migrations
             { }
-            catch // some other error occured, just ignore it
-            { }
+            catch (Exception e) // some other error occured, just print it
+            {
+                logger.LogError(e);
+            }
         }
     }
 }
