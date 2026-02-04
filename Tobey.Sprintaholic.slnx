@@ -1,0 +1,11 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Game Pass" />
+    <BuildType Name="Steam" />
+  </Configurations>
+  <Project Path="Config/Config.shproj" Id="8ad739af-4baf-4f59-b776-28dd3487d8af" />
+  <Project Path="Tobey.Sprintaholic.MegastoreSimulator/Tobey.Sprintaholic.MegastoreSimulator.csproj">
+    <BuildType Project="Steam" />
+  </Project>
+  <Project Path="Tobey.Sprintaholic.SupermarketSimulator/Tobey.Sprintaholic.SupermarketSimulator.csproj" />
+</Solution>

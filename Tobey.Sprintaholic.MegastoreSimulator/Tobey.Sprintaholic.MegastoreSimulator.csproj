@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>Tobey.Sprintaholic.SupermarketSimulator</AssemblyName>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>Tobey.Sprintaholic.MegastoreSimulator</AssemblyName>
     <Product>Sprintaholic</Product>
     <Version>1.2.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -14,10 +14,9 @@
     </RestoreAdditionalProjectSources>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <RootNamespace>Tobey.Sprintaholic.SupermarketSimulator</RootNamespace>
-    <Configurations>Steam;Game Pass</Configurations>
-    <GamePath Condition="'$(Configuration)'=='Steam'">E:\SteamLibrary\steamapps\common\Supermarket Simulator</GamePath>
-    <GamePath Condition="'$(Configuration)'=='Game Pass'">E:\XboxGames\Supermarket Simulator\Content</GamePath>
+    <RootNamespace>Tobey.Sprintaholic.MegastoreSimulator</RootNamespace>
+    <Configurations>Steam</Configurations>
+    <GamePath Condition="'$(Configuration)'=='Steam'">F:\SteamLibrary\steamapps\common\Megastore Simulator</GamePath>
   </PropertyGroup>
 
   <Target Name="ZipClean" AfterTargets="AfterClean">
@@ -29,31 +28,26 @@
     <MakeDir Directories="$(SolutionDir)\bin" Condition="!Exists('$(SolutionDir)\bin')" />
     <ZipDirectory SourceDirectory="$(OutputPath)\zip\" DestinationFile="$(SolutionDir)\bin\$(RootNamespace).$(Configuration).zip" Overwrite="true" />
   </Target>
-
+  
   <ItemGroup>
-    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="UnityEngine.Modules" Version="6000.0.64" IncludeAssets="compile" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(GamePath)\BepInEx\interop\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Il2Cppmscorlib">
-      <HintPath>$(GamePath)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+    <Reference Include="Assembly-CSharp" Publicize="true">
+      <HintPath>$(GamePath)\Megastore Simulator_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.InputSystem">
-      <HintPath>$(GamePath)\BepInEx\interop\Unity.InputSystem.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GamePath)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(GamePath)\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(GamePath)\Megastore Simulator_Data\Managed\Unity.InputSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
