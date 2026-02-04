@@ -40,6 +40,7 @@ public class Plugin : BaseUnityPlugin
             Definition: new("Movement", "Instant acceleration"),
             Description: new("Instantly transition between walking and sprinting.")));
         DisableHeadBobbing = Config.Bind("Movement", "Disable head bobbing", false);
+        SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
         SprintControlMode.SettingChanged += SprintControlMode_SettingChanged;
 
