@@ -58,6 +58,7 @@ internal static class ConfigFileExtensions
                 }
 
                 config.SaveOnConfigSet = saveOnConfigSet; // reapply original config setting
+                config.Save(); // ensure migrations are saved
             }
             catch (FileNotFoundException) // config file doesn't exist, no need to apply migrations
             { }
