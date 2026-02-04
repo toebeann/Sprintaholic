@@ -18,7 +18,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> WalkSpeed;
     internal static ConfigEntry<float> SprintSpeed;
 
-    private static bool isSprinting;
+    private static bool isSprintToggled;
 
     private void Awake()
     {
@@ -32,37 +32,36 @@ public class Plugin : BaseUnityPlugin
         AutoDisableSprint = Config.Bind(Definitions.AutoDisableSprint);
         SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
-        HoldToSprint.SettingChanged += (_, __) => isSprinting = false;
+        HoldToSprint.SettingChanged += (_, __) => isSprintToggled = false;
 
         Harmony.CreateAndPatchAll(typeof(Plugin));
     }
 
     [HarmonyPatch(typeof(InputManager), nameof(InputManager.IsPressingRun), MethodType.Getter)]
     [HarmonyPostfix]
-    private static bool GetIsSprinting(bool __result)
-    {
-        if (HoldToSprint.Value) // hold to sprint is enabled in config
-        {   // return original method result, which simply evaluates to whether the user is currently pressing the run key
-            return __result;
-        }
+    private static bool GetIsSprinting(bool __result) =>
+        HoldToSprint.Value switch
+        {
+            // when HoldToSprint is enabled, return the original method result which simply evaluates whether the user is currently pressing the run key
+            true => __result,
 
-        // treat sprint as a toggle
-        return isSprinting;
-    }
+            // otherwise, treat sprint as a toggle
+            _ => isSprintToggled
+        };
 
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.Update))]
     [HarmonyPostfix]
-    private static void UpdateIsSprinting()
+    private static void UpdateSprintToggle()
     {
-        if (SingletonBehaviour<InputManager>.Instance.RunActionRef.action.WasPerformedThisFrame())
+        if (!HoldToSprint.Value && SingletonBehaviour<InputManager>.Instance.RunActionRef.action.WasPerformedThisFrame())
         {
-            isSprinting = !isSprinting;
+            isSprintToggled = !isSprintToggled;
         }
     }
 
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.Awake))]
     [HarmonyPostfix]
-    private static void InitialiseMovementSpeedConfig(float ___walkSpeed, ref float ___runSpeed)
+    private static void InitMovementSpeedConfig(float ___walkSpeed, ref float ___runSpeed)
     {
         WalkSpeed = Config.Bind(Definitions.WalkSpeed, ___walkSpeed);
         SprintSpeed = Config.Bind(Definitions.SprintSpeed, ___runSpeed);
@@ -70,7 +69,7 @@ public class Plugin : BaseUnityPlugin
 
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.SetMovementSpeed))]
     [HarmonyPrefix]
-    private static void UpdateMovementSpeedFromConfig(ref float ___walkSpeed, ref float ___runSpeed)
+    private static void ModifyBaseMovementSpeed(ref float ___walkSpeed, ref float ___runSpeed)
     {
         ___walkSpeed = (WalkSpeed?.Value ?? ___walkSpeed) * SpeedMultiplier.Value;
         ___runSpeed = (SprintSpeed?.Value ?? ___runSpeed) * SpeedMultiplier.Value;
