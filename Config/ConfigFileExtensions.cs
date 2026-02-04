@@ -42,7 +42,6 @@ internal static class ConfigFileExtensions
 
                 var migrationsToApply = migrations
                     .SkipWhile(kvp => kvp.Key <= configVersion)
-                    .OrderBy(kvp => kvp.Key)
                     .ToList();
 
                 if (configVersion >= Version.Parse(version) || !migrationsToApply.Any()) return; // no need to apply migrations
