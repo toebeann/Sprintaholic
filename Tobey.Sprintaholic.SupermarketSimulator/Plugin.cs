@@ -7,7 +7,7 @@ using Tobey.Sprintaholic.Config;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Tobey.Sprintaholic.SupermarketSimulator.IL2CPP;
+namespace Tobey.Sprintaholic.SupermarketSimulator;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BasePlugin

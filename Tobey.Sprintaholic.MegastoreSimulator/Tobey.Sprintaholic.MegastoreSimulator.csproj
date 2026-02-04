@@ -34,6 +34,7 @@
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="UnityEngine.Modules" Version="6000.0.64" IncludeAssets="compile" />
   </ItemGroup>
   
@@ -49,6 +50,9 @@
     <Reference Include="Unity.InputSystem">
       <HintPath>$(GamePath)\Megastore Simulator_Data\Managed\Unity.InputSystem.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\Supermarket Simulator\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -39,9 +39,9 @@ internal static class ConfigFileExtensions
 
                 string line = File.ReadLines(config.ConfigFilePath) // throws if can't read file
                     .First(line => line?.StartsWith(searchString) ?? false) // throws if no line satisfies criteria
-                    .Substring(searchString.Length);
+                    [searchString.Length..];
 
-                Version configVersion = Version.Parse(line.Substring(line.LastIndexOf(" v")));
+                Version configVersion = Version.Parse(line[line.LastIndexOf(" v")..]);
 
                 var migrationsToApply = migrations
                     .SkipWhile(kvp => kvp.Key <= configVersion)

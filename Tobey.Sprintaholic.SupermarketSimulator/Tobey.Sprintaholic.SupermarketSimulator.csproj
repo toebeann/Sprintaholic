@@ -33,6 +33,7 @@
   <ItemGroup>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="PolySharp" Version="1.*" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,20 +41,16 @@
       <HintPath>$(GamePath)\BepInEx\interop\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Il2Cppmscorlib">
-      <HintPath>$(GamePath)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>$(GamePath)\BepInEx\interop\Unity.InputSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GamePath)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GamePath)\BepInEx\unity-libs\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(GamePath)\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(GamePath)\BepInEx\unity-libs\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
