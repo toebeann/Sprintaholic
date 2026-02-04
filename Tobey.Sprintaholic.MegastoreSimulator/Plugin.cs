@@ -2,6 +2,7 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using SprintMode = Tobey.Sprintaholic.Definitions.SprintMode;
 
 namespace Tobey.Sprintaholic.MegastoreSimulator;
 
@@ -11,7 +12,7 @@ public class Plugin : BaseUnityPlugin
     internal static new ManualLogSource Logger;
     internal static new ConfigFile Config;
 
-    internal static ConfigEntry<bool> HoldToSprint;
+    internal static ConfigEntry<SprintMode> SprintControlMode;
     internal static ConfigEntry<bool> AutoDisableSprint;
     internal static ConfigEntry<float> SpeedMultiplier;
     internal static ConfigEntry<float> WalkSpeed;
@@ -27,32 +28,40 @@ public class Plugin : BaseUnityPlugin
 
         Config.ApplyMigrations(MyPluginInfo.PLUGIN_VERSION, Logger);
 
-        HoldToSprint = Config.Bind(Definitions.HoldToSprint);
+        SprintControlMode = Config.Bind(Definitions.SprintControlMode);
         AutoDisableSprint = Config.Bind(Definitions.AutoDisableSprint);
         SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
-        HoldToSprint.SettingChanged += (_, __) => isSprintToggled = false;
+        SprintControlMode.SettingChanged += SprintControlMode_SettingChanged;
 
-        Harmony.CreateAndPatchAll(typeof(Plugin));
+        Harmony.CreateAndPatchAll(typeof(Plugin), MyPluginInfo.PLUGIN_GUID);
+    }
+
+    private void SprintControlMode_SettingChanged(object _, System.EventArgs __) => isSprintToggled = false;
+
+    private void OnDestroy()
+    {
+        SprintControlMode.SettingChanged -= SprintControlMode_SettingChanged;
+        Harmony.UnpatchID(MyPluginInfo.PLUGIN_GUID);
     }
 
     [HarmonyPatch(typeof(InputManager), nameof(InputManager.IsPressingRun), MethodType.Getter)]
     [HarmonyPostfix]
     private static bool GetIsSprinting(bool __result) =>
-        HoldToSprint.Value switch
+        SprintControlMode.Value switch
         {
-            // when HoldToSprint is enabled, return the original method result which simply evaluates whether the user is currently pressing the run key
-            true => __result,
+            SprintMode.Hold => __result, // simply return the original result which evaluates whether the run key is pressed
 
-            // otherwise, treat sprint as a toggle
-            _ => isSprintToggled
+            SprintMode.Always => true,
+
+            _ => isSprintToggled,
         };
 
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.Update))]
     [HarmonyPostfix]
     private static void UpdateSprintToggle()
     {
-        if (HoldToSprint.Value) return;
+        if (SprintControlMode.Value != SprintMode.Toggle) return;
 
         var inputManager = SingletonBehaviour<InputManager>.Instance;
 

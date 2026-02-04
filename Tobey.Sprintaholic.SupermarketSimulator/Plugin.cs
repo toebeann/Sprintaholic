@@ -5,6 +5,7 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using SprintMode = Tobey.Sprintaholic.Definitions.SprintMode;
 
 namespace Tobey.Sprintaholic.SupermarketSimulator;
 
@@ -14,7 +15,7 @@ public class Plugin : BasePlugin
     internal static new ManualLogSource Log;
     internal static new ConfigFile Config;
 
-    internal static ConfigEntry<bool> HoldToSprint;
+    internal static ConfigEntry<SprintMode> SprintControlMode;
     internal static ConfigEntry<bool> AutoDisableSprint;
     internal static ConfigEntry<float> SpeedMultiplier;
     internal static ConfigEntry<float> WalkSpeed;
@@ -27,7 +28,7 @@ public class Plugin : BasePlugin
 
         Config.ApplyMigrations(MyPluginInfo.PLUGIN_VERSION, Log);
 
-        HoldToSprint = Config.Bind(Definitions.HoldToSprint);
+        SprintControlMode = Config.Bind(Definitions.SprintControlMode);
         AutoDisableSprint = Config.Bind(Definitions.AutoDisableSprint);
         SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
@@ -38,16 +39,23 @@ public class Plugin : BasePlugin
     [HarmonyPrefix]
     private static bool InputActions_OnSprint(InputActions __instance, InputAction.CallbackContext context)
     {
-        if (HoldToSprint.Value || // hold to sprint is enabled in config
+        if (SprintControlMode.Value == SprintMode.Hold ||
             !__instance.IsCurrentDeviceMouse) // user is not currently using kbm controls
         {   // run original method
             return true;
         }
 
-        // treat sprint as toggle
-        if (context.started)
+        switch (SprintControlMode.Value)
         {
-            __instance.SprintInput(!__instance.m_Sprint);
+            case SprintMode.Toggle:
+                if (context.started)
+                    __instance.SprintInput(!__instance.m_Sprint);
+                break;
+
+            case SprintMode.Always
+            when !__instance.m_Sprint:
+                __instance.SprintInput(true);
+                break;
         }
 
         return false;
@@ -75,16 +83,23 @@ public class Plugin : BasePlugin
     [HarmonyPostfix]
     private static void FirstPersonController_Move_Postfix(FirstPersonController __instance)
     {
-        if (HoldToSprint.Value is false && // hold to sprint is disabled in config
-            AutoDisableSprint.Value is true) // auto disable sprint is enabled in config
+        switch (SprintControlMode.Value)
         {
-            bool isMoving = __instance._controller.velocity != Vector3.zero;
-            if (!isMoving && wasMoving)
-            {
-                __instance.m_InputActions.SprintInput(false);
-            }
+            case SprintMode.Toggle
+            when AutoDisableSprint.Value:
+                bool isMoving = __instance._controller.velocity != Vector3.zero;
+                if (!isMoving && wasMoving)
+                {
+                    __instance.m_InputActions.SprintInput(false);
+                }
 
-            wasMoving = isMoving;
+                wasMoving = isMoving;
+                break;
+
+            case SprintMode.Always
+            when !__instance.m_InputActions.m_Sprint:
+                __instance.m_InputActions.SprintInput(true);
+                break;
         }
     }
 }
