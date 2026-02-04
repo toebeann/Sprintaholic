@@ -1,5 +1,5 @@
 using BepInEx.Configuration;
 
-namespace Tobey.Sprintaholic.Config;
+namespace Tobey.Sprintaholic;
 
-public record ConfigDefinition<T>(ConfigDefinition Definition, ConfigDescription Description, T DefaultValue = default);
+internal record ConfigDefinition<T>(ConfigDefinition Definition, ConfigDescription Description, T DefaultValue = default);

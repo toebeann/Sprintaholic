@@ -1,6 +1,6 @@
-namespace Tobey.Sprintaholic.Config;
+namespace Tobey.Sprintaholic;
 
-public static class Definitions
+internal static class Definitions
 {
     public static readonly ConfigDefinition<bool> HoldToSprint = new(
         Definition: new("Controls", "Hold to sprint"),

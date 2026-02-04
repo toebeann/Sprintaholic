@@ -3,7 +3,6 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using Tobey.Sprintaholic.Config;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

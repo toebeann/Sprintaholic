@@ -5,18 +5,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Tobey.Sprintaholic.Config;
+namespace Tobey.Sprintaholic;
 
 internal static class ConfigFileExtensions
 {
     internal static readonly SortedDictionary<Version, Action<ConfigFile>> migrations = new()
     {
-        [new("1.2.0")] = (ConfigFile config) =>
-        {
-            // v1.2.0 introduces `Controls.Auto disable sprint` config entry, default true to mimic the way the sprint toggle works with gamepad controls
-            // Users of Sprintaholic prior to this version will be used to having to disable it manually, so we should default it to false for them to avoid messing with their muscle memory
-            config.Bind(Definitions.AutoDisableSprint, false);
-        },
+        // v1.2.0 introduces `Controls.Auto disable sprint` config entry, default true to mimic the way the sprint toggle works with gamepad controls
+        // Users of Sprintaholic prior to this version will be used to having to disable it manually, so we should default it to false for them to avoid messing with their muscle memory
+        [new("1.2.0")] = (ConfigFile config) => config.Bind(Definitions.AutoDisableSprint, false),
     };
 
     extension(ConfigFile config)

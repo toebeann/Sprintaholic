@@ -2,7 +2,6 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
-using Tobey.Sprintaholic.Config;
 
 namespace Tobey.Sprintaholic.MegastoreSimulator;
 
