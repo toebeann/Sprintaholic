@@ -4,7 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>Tobey.Sprintaholic.MegastoreSimulator</AssemblyName>
     <Product>Sprintaholic</Product>
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -26,7 +26,7 @@
   <Target Name="ZipBuild" AfterTargets="AfterBuild">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputPath)\zip\BepInEx\plugins\" />
     <MakeDir Directories="$(SolutionDir)\bin" Condition="!Exists('$(SolutionDir)\bin')" />
-    <ZipDirectory SourceDirectory="$(OutputPath)\zip\" DestinationFile="$(SolutionDir)\bin\$(RootNamespace).$(Configuration).zip" Overwrite="true" />
+    <ZipDirectory SourceDirectory="$(OutputPath)\zip\" DestinationFile="$(SolutionDir)\bin\$(RootNamespace).zip" Overwrite="true" />
   </Target>
   
   <ItemGroup>

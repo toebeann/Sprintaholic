@@ -125,7 +125,7 @@ public class Plugin : BaseUnityPlugin
                 true => ___runSpeed * multiplier,
                 false => ___walkSpeed * multiplier,
             };
-    }
+        }
     }
 
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.PlayerMovement))]
