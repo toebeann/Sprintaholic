@@ -53,9 +53,20 @@ public class Plugin : BaseUnityPlugin
     [HarmonyPostfix]
     private static void UpdateSprintToggle()
     {
-        if (!HoldToSprint.Value && SingletonBehaviour<InputManager>.Instance.RunActionRef.action.WasPerformedThisFrame())
+        if (HoldToSprint.Value) return;
+
+        var inputManager = SingletonBehaviour<InputManager>.Instance;
+
+        if (AutoDisableSprint.Value && // user wants to automatically stop sprinting when they stop moving
+            isSprintToggled && // user is sprinting
+            inputManager.MovementInput is (0f, 0f)) // user has released all movement inputs
         {
-            isSprintToggled = !isSprintToggled;
+            isSprintToggled = false; // disable sprint
+        }
+
+        if (inputManager.RunActionRef.action.WasPerformedThisFrame())
+        {
+            isSprintToggled = !isSprintToggled; // toggle sprint
         }
     }
 

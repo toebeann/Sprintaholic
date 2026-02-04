@@ -51,9 +51,6 @@
       <HintPath>$(GamePath)\Megastore Simulator_Data\Managed\Unity.InputSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>E:\SteamLibrary\steamapps\common\Supermarket Simulator\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <Import Project="..\Config\Config.projitems" Label="Shared" />
