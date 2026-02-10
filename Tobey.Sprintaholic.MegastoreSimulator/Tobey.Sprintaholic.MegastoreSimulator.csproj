@@ -14,6 +14,8 @@
     </RestoreAdditionalProjectSources>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <DebugType>none</DebugType>
     <RootNamespace>Tobey.Sprintaholic.MegastoreSimulator</RootNamespace>
     <Configurations>Steam</Configurations>
     <GamePath Condition="'$(Configuration)'=='Steam'">F:\SteamLibrary\steamapps\common\Megastore Simulator</GamePath>

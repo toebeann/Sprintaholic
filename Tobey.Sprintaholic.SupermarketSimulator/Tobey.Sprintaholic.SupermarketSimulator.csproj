@@ -14,6 +14,8 @@
     </RestoreAdditionalProjectSources>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <DebugType>none</DebugType>
     <RootNamespace>Tobey.Sprintaholic.SupermarketSimulator</RootNamespace>
     <Configurations>Steam;GamePass</Configurations>
     <GamePath Condition="'$(Configuration)'=='Steam'">E:\SteamLibrary\steamapps\common\Supermarket Simulator</GamePath>
