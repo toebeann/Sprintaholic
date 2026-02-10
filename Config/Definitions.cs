@@ -21,7 +21,7 @@ internal static class Definitions
 
     public static readonly ConfigDefinition<bool> SprintByDefault = new(
         Definition: new("Controls", "Sprint by default"),
-        Description: new("Swaps your walk and sprint speed so that you start off sprinting, and the sprint is used to control when you walk. Has no effect when Sprint control mode is Always."));
+        Description: new("When enabled, you sprint by default and walk when sprint is activated. Has no effect when Sprint control mode is Always."));
 
     public static readonly ConfigDefinition<float> SpeedMultiplier = new(
         Definition: new("Movement", "Speed multiplier"),
