@@ -29,7 +29,6 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        // Plugin startup logic
         Logger = base.Logger;
         Config = base.Config;
 
@@ -44,12 +43,15 @@ public class Plugin : BaseUnityPlugin
         DisableHeadBobbing = Config.Bind("Movement", "Disable head bobbing", false);
         SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
-        SprintControlMode.SettingChanged += SprintControlMode_SettingChanged;
+        SprintControlMode.SettingChanged += SprintControlMode_SettingChanged; ;
+
+        ResetSprintToggle();
 
         Harmony.CreateAndPatchAll(typeof(Plugin), MyPluginInfo.PLUGIN_GUID);
     }
 
-    private void SprintControlMode_SettingChanged(object _, System.EventArgs __) => isSprintToggled = false;
+    private static void ResetSprintToggle() => isSprintToggled = SprintByDefault.Value;
+    private void SprintControlMode_SettingChanged(object _, System.EventArgs __) => ResetSprintToggle();
 
     private void OnDestroy()
     {
@@ -62,7 +64,8 @@ public class Plugin : BaseUnityPlugin
     private static bool GetIsSprinting(bool __result) =>
         SprintControlMode.Value switch
         {
-            SprintMode.Hold => __result, // simply return the original result which evaluates whether the run key is pressed
+            // use original result (evaluates whether the run key is pressed), negate with sprint by default
+            SprintMode.Hold => __result != SprintByDefault.Value,
 
             SprintMode.Always => true,
 
@@ -77,11 +80,11 @@ public class Plugin : BaseUnityPlugin
 
         var inputManager = SingletonBehaviour<InputManager>.Instance;
 
-        if (AutoDisableSprint.Value && // user wants to automatically stop sprinting when they stop moving
-            isSprintToggled && // user is sprinting
-            inputManager.MovementInput is (0f, 0f)) // user has released all movement inputs
+        if (AutoDisableSprint.Value // user wants to automatically stop sprinting when they stop moving
+            && inputManager.MovementInput is (0f, 0f) // user has released all movement inputs
+            && isSprintToggled != SprintByDefault.Value) // sprint toggle needs to be reset
         {
-            isSprintToggled = false; // disable sprint
+            ResetSprintToggle(); // reset sprint
         }
 
         if (inputManager.RunActionRef.action.WasPerformedThisFrame())
@@ -102,17 +105,8 @@ public class Plugin : BaseUnityPlugin
     [HarmonyPrefix]
     private static void ModifyBaseMovementSpeed(ref float ___walkSpeed, ref float ___runSpeed)
     {
-        ___walkSpeed = SpeedMultiplier.Value * SprintByDefault.Value switch
-        {
-            true => SprintSpeed?.Value ?? ___runSpeed,
-            _ => WalkSpeed?.Value ?? ___walkSpeed,
-        };
-
-        ___runSpeed = SpeedMultiplier.Value * SprintByDefault.Value switch
-        {
-            true => WalkSpeed?.Value ?? ___walkSpeed,
-            _ => SprintSpeed?.Value ?? ___runSpeed,
-        };
+        ___walkSpeed = SpeedMultiplier.Value * (WalkSpeed?.Value ?? ___walkSpeed);
+        ___runSpeed = SpeedMultiplier.Value * (SprintSpeed?.Value ?? ___runSpeed);
     }
 
     [HarmonyPatch(typeof(PlayerMove), nameof(PlayerMove.SetMovementSpeed))]
