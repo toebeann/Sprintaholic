@@ -18,7 +18,7 @@
     <DebugType>none</DebugType>
     <RootNamespace>Tobey.Sprintaholic.MegastoreSimulator</RootNamespace>
     <Configurations>Steam</Configurations>
-    <GamePath Condition="'$(Configuration)'=='Steam'">F:\SteamLibrary\steamapps\common\Megastore Simulator</GamePath>
+    <GamePath>F:\SteamLibrary\steamapps\common\Megastore Simulator</GamePath>
   </PropertyGroup>
 
   <Target Name="ZipClean" AfterTargets="AfterClean">
