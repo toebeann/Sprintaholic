@@ -8,6 +8,6 @@
     <BuildType Project="Steam" />
   </Project>
   <Project Path="Tobey.Sprintaholic.SupermarketSimulator/Tobey.Sprintaholic.SupermarketSimulator.csproj">
-    <BuildType Solution="GamePass|*" Project="Game Pass" />
+    <BuildType Project="Steam" />
   </Project>
 </Solution>
