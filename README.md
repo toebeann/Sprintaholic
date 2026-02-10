@@ -11,7 +11,7 @@
 
 | Compatibility           | Platform  | Tested game version |
 | ----------------------- | --------- | ------------------- |
-| Megastore Simulator     | Steam     | v0.1.0              |
+| Megastore Simulator     | Steam     | v0.1.5              |
 | Supermarket Simulator\* | Steam     | v1.1.7              |
 |                         | Game Pass | v1.1.9              |
 
