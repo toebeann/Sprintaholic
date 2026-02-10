@@ -43,7 +43,11 @@ public class Plugin : BaseUnityPlugin
         DisableHeadBobbing = Config.Bind("Movement", "Disable head bobbing", false);
         SpeedMultiplier = Config.Bind(Definitions.SpeedMultiplier);
 
+        SprintControlMode.SettingChanged -= SprintControlMode_SettingChanged;
         SprintControlMode.SettingChanged += SprintControlMode_SettingChanged; ;
+
+        SprintByDefault.SettingChanged -= SprintByDefault_SettingChanged;
+        SprintByDefault.SettingChanged += SprintByDefault_SettingChanged; ;
 
         ResetSprintToggle();
 
@@ -51,11 +55,14 @@ public class Plugin : BaseUnityPlugin
     }
 
     private static void ResetSprintToggle() => isSprintToggled = SprintByDefault.Value;
+    private static void ToggleSprint() => isSprintToggled = !isSprintToggled;
     private void SprintControlMode_SettingChanged(object _, System.EventArgs __) => ResetSprintToggle();
+    private void SprintByDefault_SettingChanged(object _, System.EventArgs __) => ToggleSprint();
 
     private void OnDestroy()
     {
         SprintControlMode.SettingChanged -= SprintControlMode_SettingChanged;
+        SprintByDefault.SettingChanged -= SprintByDefault_SettingChanged;
         Harmony.UnpatchID(MyPluginInfo.PLUGIN_GUID);
     }
 
@@ -89,7 +96,7 @@ public class Plugin : BaseUnityPlugin
 
         if (inputManager.RunActionRef.action.WasPerformedThisFrame())
         {
-            isSprintToggled = !isSprintToggled; // toggle sprint
+            ToggleSprint();
         }
     }
 
